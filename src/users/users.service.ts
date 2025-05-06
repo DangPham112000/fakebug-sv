@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
+import { UserRegistrationDto } from 'src/common/dto/user-registration.dto';
 
 export interface RegisterResponse {
   id: number;
@@ -35,6 +36,15 @@ export class UsersService {
     const user = await this.prisma.user.findFirst({
       where: { OR: [{ username }, { email }] },
       select: { id: true, username: true, email: true, password: true },
+    });
+
+    return user;
+  }
+
+  async create(createUserDto: UserRegistrationDto): Promise<RegisterResponse> {
+    const user = await this.prisma.user.create({
+      data: createUserDto,
+      select: { id: true, email: true, username: true },
     });
 
     return user;

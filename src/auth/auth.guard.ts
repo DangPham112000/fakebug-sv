@@ -33,9 +33,9 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException('Token is not provided', {
+      throw new UnauthorizedException('Unauthorized', {
         cause: new Error(),
-        description: 'Unauthorized',
+        description: 'Token is not provided',
       });
     }
 
@@ -46,9 +46,9 @@ export class AuthGuard implements CanActivate {
 
       request['user'] = tokenPayload;
     } catch (error) {
-      throw new UnauthorizedException('Error verifying token', {
+      throw new UnauthorizedException('Unauthorized', {
         cause: new Error(),
-        description: 'Unauthorized',
+        description: 'Error when verifying token',
       });
     }
 

@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, hash } from 'bcrypt';
-import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { LoginDto } from './dto/login.dto';
+import { UserRegistrationDto } from 'src/common/dto/user-registration.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,49 +23,42 @@ export class AuthService {
     return await hash(plainText, saltRounds);
   }
 
-  // async register(registerUserDto: RegisterUserDto): Promise<any> {
-  //   const existedUser = await this.prisma.user.findFirst({
-  //     where: {
-  //       OR: [
-  //         { email: registerUserDto.email },
-  //         { username: registerUserDto.username },
-  //       ],
-  //     },
-  //   });
-
-  //   if (existedUser) {
-  //     throw new BadRequestException('Email or username is already exist', {
-  //       cause: new Error(),
-  //       description: 'User is already exist',
-  //     });
-  //   }
-
-  //   const hashedPassword = await this.hashPassword(
-  //     registerUserDto.password,
-  //     10,
-  //   );
-
-  //   const hashedPassword2 = await this.hashPassword(
-  //     registerUserDto.password,
-  //     10,
-  //   );
-
-  //   console.log(hashedPassword, hashedPassword2);
-
-  //   registerUserDto.password = hashedPassword;
-
-  //   const user = await this.prisma.user.create({
-  //     data: registerUserDto,
-  //     select: { email: true, id: true },
-  //   });
-
-  //   return user;
-  // }
-
-  async login(loginUserDto: LoginUserDto): Promise<{ accessToken: string }> {
+  async register(registerDto: UserRegistrationDto): Promise<any> {
     const existedUser = await this.usersService.findFirstByUsernameOrEmail({
-      username: loginUserDto.username,
-      email: loginUserDto.email,
+      username: registerDto.username,
+      email: registerDto.email,
+    });
+
+    if (existedUser) {
+      throw new BadRequestException('User is already exist', {
+        cause: new Error(),
+        description: 'Email or username is already exist',
+      });
+    }
+
+    const hashedPassword = await this.hashPassword(registerDto.password, 10);
+
+    registerDto.password = hashedPassword;
+
+    const user = await this.usersService.create({
+      ...registerDto,
+      password: hashedPassword,
+    });
+
+    return user;
+  }
+
+  async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
+    if (loginDto.email && loginDto.username) {
+      throw new BadRequestException('Login failed', {
+        cause: new Error(),
+        description: 'Should only provide either email or username',
+      });
+    }
+
+    const existedUser = await this.usersService.findFirstByUsernameOrEmail({
+      username: loginDto.username,
+      email: loginDto.email,
     });
     if (!existedUser) {
       throw new BadRequestException('Email or username is not found', {
@@ -74,7 +68,7 @@ export class AuthService {
     }
 
     const isCorrectPassword = compareSync(
-      loginUserDto.password,
+      loginDto.password,
       existedUser.password,
     );
     if (!isCorrectPassword) {

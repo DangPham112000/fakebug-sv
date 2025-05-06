@@ -7,29 +7,29 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { LoginUserDto } from 'src/users/dto/login-user.dto';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
+import { LoginDto } from './dto/login.dto';
+import { UserRegistrationDto } from 'src/common/dto/user-registration.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //   @HttpCode(HttpStatus.OK)
-  //   @Post('register')
-  //   async register(
-  //     @Body() registerUserDto: RegisterUserDto,
-  //   ): Promise<RegisterResponse> {
-  //     console.log('register user: ', registerUserDto);
-  //     return await this.authService.register(registerUserDto);
-  //   }
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  async register(@Body() registerDto: UserRegistrationDto): Promise<any> {
+    console.log('register user: ', registerDto);
+    return await this.authService.register(registerDto);
+  }
 
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto): Promise<any> {
-    console.log('login user: ', loginUserDto);
-    return await this.authService.login(loginUserDto);
+  async login(@Body() loginDto: LoginDto): Promise<any> {
+    console.log('login user: ', loginDto);
+    return await this.authService.login(loginDto);
   }
 
   @Get('profile')
