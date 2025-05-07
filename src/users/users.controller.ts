@@ -1,6 +1,5 @@
 import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('users')
@@ -14,21 +13,21 @@ export class UsersController {
   }
 
   @Public()
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOneById({ id: parseInt(id) });
-  }
-
-  @Public()
   @Get('all')
   async findMany() {
     return await this.usersService.findMany();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  @Public()
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOneById({ id: parseInt(id) });
   }
+
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  //   return this.usersService.update(+id, updateUserDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

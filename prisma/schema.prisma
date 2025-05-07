@@ -14,14 +14,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           Int     @id @default(autoincrement())
-  email        String  @unique
-  username     String  @unique
+model Account {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  username     String   @unique
   password     String
   tokenSecret  String?
-  tokenVersion Int     @default(0)
+  tokenVersion Int      @default(0)
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @db.Timestamp(6)
 
+  // RELATIONS
+  user User?
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
   displayName String?
   bio         String?
   location    String?
@@ -33,14 +41,14 @@ model User {
   updatedAt   DateTime @updatedAt @db.Timestamp(6)
 
   // RELATIONS
-  posts Post[]
+  accountId Int     @unique
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
-  likes Like[]
-
-  saves SavedPosts[]
-
-  followers  Follow[] @relation("UserFollowers")
-  followings Follow[] @relation("UserFollowings")
+  posts      Post[]
+  likes      Like[]
+  saves      SavedPosts[]
+  followers  Follow[]     @relation("UserFollowers")
+  followings Follow[]     @relation("UserFollowings")
 }
 
 model Post {
@@ -66,7 +74,6 @@ model Post {
   comments     Post[] @relation("PostComments")
 
   likes Like[]
-
   saves SavedPosts[]
 }
 

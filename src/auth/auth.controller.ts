@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { LoginDto } from './dto/login.dto';
-import { UserRegistrationDto } from 'src/common/dto/user-registration.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { RegistrationUserDto } from 'src/auth/dto/registration-user.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
@@ -20,14 +20,14 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('register')
-  async register(@Body() registerDto: UserRegistrationDto): Promise<any> {
+  async register(@Body() registerDto: RegistrationUserDto): Promise<any> {
     return await this.authService.register(registerDto);
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() loginDto: LoginDto): Promise<any> {
+  async login(@Body() loginDto: LoginUserDto): Promise<any> {
     return await this.authService.login(loginDto);
   }
 

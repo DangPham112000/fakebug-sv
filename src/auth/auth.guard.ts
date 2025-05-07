@@ -8,14 +8,14 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
-import { UsersService } from 'src/users/users.service';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
-    private userService: UsersService,
+    private authService: AuthService,
   ) {}
 
   private extractTokenFromHeader(request: Request): string | undefined {
@@ -50,21 +50,21 @@ export class AuthGuard implements CanActivate {
         });
       }
 
-      const user = await this.userService.findOneById({
+      const account = await this.authService.findOneById({
         id: decoded.sub,
       });
-      if (!user || !user.tokenSecret) {
+      if (!account || !account.tokenSecret) {
         throw new UnauthorizedException('Unauthorized', {
           cause: new Error(),
-          description: 'User not found or token revoked',
+          description: 'Account not found or token revoked',
         });
       }
 
       const tokenPayload = await this.jwtService.verifyAsync(token, {
-        secret: user.tokenSecret,
+        secret: account.tokenSecret,
       });
 
-      request['user'] = tokenPayload;
+      request['account'] = tokenPayload;
     } catch (error) {
       throw new UnauthorizedException('Unauthorized', {
         cause: new Error(),

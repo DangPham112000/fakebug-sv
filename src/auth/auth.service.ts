@@ -6,8 +6,8 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, hash } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto } from './dto/login.dto';
-import { UserRegistrationDto } from 'src/common/dto/user-registration.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { RegistrationUserDto } from 'src/auth/dto/registration-user.dto';
 import { PrismaService } from 'src/prisma.service';
 import { randomBytes } from 'crypto';
 
@@ -30,8 +30,8 @@ export class AuthService {
     return randomBytes(32).toString('hex');
   }
 
-  async register(registerDto: UserRegistrationDto): Promise<any> {
-    const existedUser = await this.usersService.findFirstByUsernameOrEmail({
+  async register(registerDto: RegistrationUserDto): Promise<any> {
+    const existedUser = await this.findOneByUsernameOrEmail({
       username: registerDto.username,
       email: registerDto.email,
     });
@@ -46,18 +46,31 @@ export class AuthService {
     const hashedPassword = await this.hashPassword(registerDto.password, 10);
     const tokenSecret = this.generateTokenSecret();
 
-    const user = await this.usersService.create({
-      ...registerDto,
-      password: hashedPassword,
-      tokenSecret,
-      tokenVersion: 0,
+    const account = await this.prisma.account.create({
+      data: {
+        email: registerDto.email,
+        username: registerDto.username,
+        password: hashedPassword,
+        tokenSecret,
+        tokenVersion: 0,
+      },
     });
 
-    return { id: user.id, email: user.email, username: user.username };
+    const user = await this.usersService.create({
+      accountId: account.id,
+      displayName: registerDto.displayName,
+    });
+
+    return {
+      id: account.id,
+      email: account.email,
+      username: account.username,
+      displayName: user.displayName,
+    };
   }
 
   async login(
-    loginDto: LoginDto,
+    loginDto: LoginUserDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     if (loginDto.email && loginDto.username) {
       throw new BadRequestException('Login failed', {
@@ -66,11 +79,11 @@ export class AuthService {
       });
     }
 
-    const existedUser = await this.usersService.findFirstByUsernameOrEmail({
+    const existedAccount = await this.findOneByUsernameOrEmail({
       username: loginDto.username,
       email: loginDto.email,
     });
-    if (!existedUser) {
+    if (!existedAccount) {
       throw new BadRequestException('Email or username is not found', {
         cause: new Error(),
         description: 'Email or username is not found',
@@ -79,7 +92,7 @@ export class AuthService {
 
     const isCorrectPassword = compareSync(
       loginDto.password,
-      existedUser.password,
+      existedAccount.password,
     );
     if (!isCorrectPassword) {
       throw new UnauthorizedException('Password is not correct', {
@@ -88,43 +101,87 @@ export class AuthService {
       });
     }
 
-    if (!existedUser.tokenSecret) {
+    if (!existedAccount.tokenSecret) {
       const tokenSecret = this.generateTokenSecret();
-      await this.usersService.updateTokenSecret({
-        id: existedUser.id,
+      await this.updateTokenSecret({
+        id: existedAccount.id,
         tokenSecret,
       });
-      existedUser.tokenSecret = tokenSecret;
+      existedAccount.tokenSecret = tokenSecret;
     }
 
-    return this.generateTokenPair({ user: existedUser });
+    return this.generateTokenPair({ account: existedAccount });
   }
 
   private async generateTokenPair({
-    user,
+    account,
   }: {
-    user: any;
+    account: any;
   }): Promise<{ accessToken: string; refreshToken: string }> {
     const acTokenPayload = {
-      sub: user.id,
-      email: user.email,
-      username: user.username,
+      sub: account.id,
+      email: account.email,
+      username: account.username,
     };
     const accessToken = await this.jwtService.signAsync(acTokenPayload, {
       expiresIn: '15m',
-      secret: user.tokenSecret,
+      secret: account.tokenSecret,
     });
 
     const rfTokenPayload = {
-      sub: user.id,
-      version: user.tokenVersion,
+      sub: account.id,
+      version: account.tokenVersion,
     };
     const refreshToken = await this.jwtService.signAsync(rfTokenPayload, {
       expiresIn: '7d',
-      secret: user.tokenSecret,
+      secret: account.tokenSecret,
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async updateTokenSecret({
+    id,
+    tokenSecret,
+  }: {
+    id: number;
+    tokenSecret: string;
+  }) {
+    await this.prisma.account.update({
+      where: { id },
+      data: { tokenSecret },
+    });
+  }
+
+  async findOneById({ id }: { id: number }) {
+    const account = await this.prisma.account.findUnique({
+      where: { id },
+    });
+
+    return account;
+  }
+
+  async findOneByUsernameOrEmail({
+    username,
+    email,
+  }: {
+    username?: string;
+    email?: string;
+  }) {
+    const account = await this.prisma.account.findFirst({
+      where: { OR: [{ username }, { email }] },
+    });
+
+    return account;
+  }
+
+  async updateTokenVersion({ id }: { id: number }) {
+    const user = await this.prisma.account.update({
+      where: { id },
+      data: { tokenVersion: { increment: 1 } },
+    });
+
+    return user;
   }
 
   async renewRefreshToken(
@@ -140,10 +197,10 @@ export class AuthService {
         });
       }
 
-      const user = await this.usersService.findOneById({
+      const account = await this.findOneById({
         id: decoded.sub,
       });
-      if (!user || !user.tokenSecret) {
+      if (!account || !account.tokenSecret) {
         throw new UnauthorizedException('Unauthorized', {
           cause: new Error(),
           description: 'User not found or token revoked',
@@ -151,22 +208,22 @@ export class AuthService {
       }
 
       const rfTokenPayload = await this.jwtService.verifyAsync(refreshToken, {
-        secret: user.tokenSecret,
+        secret: account.tokenSecret,
       });
 
-      if (rfTokenPayload.version !== user.tokenVersion) {
+      if (rfTokenPayload.version !== account.tokenVersion) {
         throw new UnauthorizedException('Unauthorized', {
           cause: new Error(),
           description: 'Token has been revoked',
         });
       }
 
-      const updateUser = await this.usersService.updateTokenVersion({
-        id: user.id,
+      const updateUser = await this.updateTokenVersion({
+        id: account.id,
       });
 
       const tokenPair = await this.generateTokenPair({
-        user: updateUser,
+        account: updateUser,
       });
 
       return tokenPair;
