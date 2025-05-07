@@ -8,12 +8,14 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private reflector: Reflector,
+    private userService: UsersService,
   ) {}
 
   private extractTokenFromHeader(request: Request): string | undefined {
@@ -40,8 +42,26 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
+      const decoded = this.jwtService.decode(token);
+      if (!decoded || !decoded.sub) {
+        throw new UnauthorizedException('Unauthorized', {
+          cause: new Error(),
+          description: 'Invalid token format',
+        });
+      }
+
+      const user = await this.userService.findOneById({
+        id: decoded.sub,
+      });
+      if (!user || !user.tokenSecret) {
+        throw new UnauthorizedException('Unauthorized', {
+          cause: new Error(),
+          description: 'User not found or token revoked',
+        });
+      }
+
       const tokenPayload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET,
+        secret: user.tokenSecret,
       });
 
       request['user'] = tokenPayload;

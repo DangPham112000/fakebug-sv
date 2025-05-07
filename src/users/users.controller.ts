@@ -13,9 +13,16 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOneById({ id: parseInt(id) });
+  }
+
+  @Public()
+  @Get('all')
+  async findMany() {
+    return await this.usersService.findMany();
   }
 
   @Patch(':id')

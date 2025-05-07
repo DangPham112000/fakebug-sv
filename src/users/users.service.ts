@@ -13,6 +13,8 @@ export interface User {
   email: string;
   username: string;
   password: string;
+  tokenSecret: string | null;
+  tokenVersion: number;
 }
 
 @Injectable()
@@ -35,13 +37,20 @@ export class UsersService {
 
     const user = await this.prisma.user.findFirst({
       where: { OR: [{ username }, { email }] },
-      select: { id: true, username: true, email: true, password: true },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: true,
+        tokenSecret: true,
+        tokenVersion: true,
+      },
     });
 
     return user;
   }
 
-  async create(createUserDto: UserRegistrationDto): Promise<RegisterResponse> {
+  async create(createUserDto: UserRegistrationDto): Promise<any> {
     const user = await this.prisma.user.create({
       data: createUserDto,
       select: { id: true, email: true, username: true },
@@ -54,8 +63,34 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOneById({ id }: { id: number }) {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+
+    return user;
+  }
+
+  async updateTokenSecret({
+    id,
+    tokenSecret,
+  }: {
+    id: number;
+    tokenSecret: string;
+  }) {
+    await this.prisma.user.update({
+      where: { id },
+      data: { tokenSecret },
+    });
+  }
+
+  async updateTokenVersion({ id }: { id: number }) {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { tokenVersion: { increment: 1 } },
+    });
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

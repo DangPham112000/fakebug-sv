@@ -19,4 +19,10 @@ export class UserRegistrationDto {
 
   @IsOptional()
   displayName: string;
+
+  @IsOptional()
+  tokenSecret: string;
+
+  @IsOptional()
+  tokenVersion: number;
 }

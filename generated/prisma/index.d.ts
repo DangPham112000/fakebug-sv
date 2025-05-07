@@ -1371,10 +1371,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
+    tokenVersion: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    tokenVersion: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1382,6 +1384,8 @@ export namespace Prisma {
     email: string | null
     username: string | null
     password: string | null
+    tokenSecret: string | null
+    tokenVersion: number | null
     displayName: string | null
     bio: string | null
     location: string | null
@@ -1398,6 +1402,8 @@ export namespace Prisma {
     email: string | null
     username: string | null
     password: string | null
+    tokenSecret: string | null
+    tokenVersion: number | null
     displayName: string | null
     bio: string | null
     location: string | null
@@ -1414,6 +1420,8 @@ export namespace Prisma {
     email: number
     username: number
     password: number
+    tokenSecret: number
+    tokenVersion: number
     displayName: number
     bio: number
     location: number
@@ -1429,10 +1437,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     id?: true
+    tokenVersion?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    tokenVersion?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -1440,6 +1450,8 @@ export namespace Prisma {
     email?: true
     username?: true
     password?: true
+    tokenSecret?: true
+    tokenVersion?: true
     displayName?: true
     bio?: true
     location?: true
@@ -1456,6 +1468,8 @@ export namespace Prisma {
     email?: true
     username?: true
     password?: true
+    tokenSecret?: true
+    tokenVersion?: true
     displayName?: true
     bio?: true
     location?: true
@@ -1472,6 +1486,8 @@ export namespace Prisma {
     email?: true
     username?: true
     password?: true
+    tokenSecret?: true
+    tokenVersion?: true
     displayName?: true
     bio?: true
     location?: true
@@ -1575,6 +1591,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret: string | null
+    tokenVersion: number
     displayName: string | null
     bio: string | null
     location: string | null
@@ -1610,6 +1628,8 @@ export namespace Prisma {
     email?: boolean
     username?: boolean
     password?: boolean
+    tokenSecret?: boolean
+    tokenVersion?: boolean
     displayName?: boolean
     bio?: boolean
     location?: boolean
@@ -1632,6 +1652,8 @@ export namespace Prisma {
     email?: boolean
     username?: boolean
     password?: boolean
+    tokenSecret?: boolean
+    tokenVersion?: boolean
     displayName?: boolean
     bio?: boolean
     location?: boolean
@@ -1648,6 +1670,8 @@ export namespace Prisma {
     email?: boolean
     username?: boolean
     password?: boolean
+    tokenSecret?: boolean
+    tokenVersion?: boolean
     displayName?: boolean
     bio?: boolean
     location?: boolean
@@ -1664,6 +1688,8 @@ export namespace Prisma {
     email?: boolean
     username?: boolean
     password?: boolean
+    tokenSecret?: boolean
+    tokenVersion?: boolean
     displayName?: boolean
     bio?: boolean
     location?: boolean
@@ -1675,7 +1701,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "username" | "password" | "displayName" | "bio" | "location" | "job" | "website" | "img" | "cover" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "username" | "password" | "tokenSecret" | "tokenVersion" | "displayName" | "bio" | "location" | "job" | "website" | "img" | "cover" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     posts?: boolean | User$postsArgs<ExtArgs>
     likes?: boolean | User$likesArgs<ExtArgs>
@@ -1701,6 +1727,8 @@ export namespace Prisma {
       email: string
       username: string
       password: string
+      tokenSecret: string | null
+      tokenVersion: number
       displayName: string | null
       bio: string | null
       location: string | null
@@ -2142,6 +2170,8 @@ export namespace Prisma {
     readonly email: FieldRef<"User", 'String'>
     readonly username: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
+    readonly tokenSecret: FieldRef<"User", 'String'>
+    readonly tokenVersion: FieldRef<"User", 'Int'>
     readonly displayName: FieldRef<"User", 'String'>
     readonly bio: FieldRef<"User", 'String'>
     readonly location: FieldRef<"User", 'String'>
@@ -7335,6 +7365,8 @@ export namespace Prisma {
     email: 'email',
     username: 'username',
     password: 'password',
+    tokenSecret: 'tokenSecret',
+    tokenVersion: 'tokenVersion',
     displayName: 'displayName',
     bio: 'bio',
     location: 'location',
@@ -7499,6 +7531,8 @@ export namespace Prisma {
     email?: StringFilter<"User"> | string
     username?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
+    tokenSecret?: StringNullableFilter<"User"> | string | null
+    tokenVersion?: IntFilter<"User"> | number
     displayName?: StringNullableFilter<"User"> | string | null
     bio?: StringNullableFilter<"User"> | string | null
     location?: StringNullableFilter<"User"> | string | null
@@ -7520,6 +7554,8 @@ export namespace Prisma {
     email?: SortOrder
     username?: SortOrder
     password?: SortOrder
+    tokenSecret?: SortOrderInput | SortOrder
+    tokenVersion?: SortOrder
     displayName?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
@@ -7544,6 +7580,8 @@ export namespace Prisma {
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
     password?: StringFilter<"User"> | string
+    tokenSecret?: StringNullableFilter<"User"> | string | null
+    tokenVersion?: IntFilter<"User"> | number
     displayName?: StringNullableFilter<"User"> | string | null
     bio?: StringNullableFilter<"User"> | string | null
     location?: StringNullableFilter<"User"> | string | null
@@ -7565,6 +7603,8 @@ export namespace Prisma {
     email?: SortOrder
     username?: SortOrder
     password?: SortOrder
+    tokenSecret?: SortOrderInput | SortOrder
+    tokenVersion?: SortOrder
     displayName?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
     location?: SortOrderInput | SortOrder
@@ -7589,6 +7629,8 @@ export namespace Prisma {
     email?: StringWithAggregatesFilter<"User"> | string
     username?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
+    tokenSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
+    tokenVersion?: IntWithAggregatesFilter<"User"> | number
     displayName?: StringNullableWithAggregatesFilter<"User"> | string | null
     bio?: StringNullableWithAggregatesFilter<"User"> | string | null
     location?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -7874,6 +7916,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -7895,6 +7939,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -7915,6 +7961,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7936,6 +7984,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7957,6 +8007,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -7972,6 +8024,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -7988,6 +8042,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -8341,6 +8397,8 @@ export namespace Prisma {
     email?: SortOrder
     username?: SortOrder
     password?: SortOrder
+    tokenSecret?: SortOrder
+    tokenVersion?: SortOrder
     displayName?: SortOrder
     bio?: SortOrder
     location?: SortOrder
@@ -8354,6 +8412,7 @@ export namespace Prisma {
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
+    tokenVersion?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -8361,6 +8420,8 @@ export namespace Prisma {
     email?: SortOrder
     username?: SortOrder
     password?: SortOrder
+    tokenSecret?: SortOrder
+    tokenVersion?: SortOrder
     displayName?: SortOrder
     bio?: SortOrder
     location?: SortOrder
@@ -8377,6 +8438,8 @@ export namespace Prisma {
     email?: SortOrder
     username?: SortOrder
     password?: SortOrder
+    tokenSecret?: SortOrder
+    tokenVersion?: SortOrder
     displayName?: SortOrder
     bio?: SortOrder
     location?: SortOrder
@@ -8390,6 +8453,7 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+    tokenVersion?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8748,6 +8812,14 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -8820,14 +8892,6 @@ export namespace Prisma {
     update?: FollowUpdateWithWhereUniqueWithoutFollowingInput | FollowUpdateWithWhereUniqueWithoutFollowingInput[]
     updateMany?: FollowUpdateManyWithWhereWithoutFollowingInput | FollowUpdateManyWithWhereWithoutFollowingInput[]
     deleteMany?: FollowScalarWhereInput | FollowScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type PostUncheckedUpdateManyWithoutUserNestedInput = {
@@ -9644,6 +9708,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -9664,6 +9730,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -9903,6 +9971,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -9923,6 +9993,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10094,6 +10166,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10114,6 +10188,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10187,6 +10263,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10207,6 +10285,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10270,6 +10350,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10290,6 +10372,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10363,6 +10447,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10383,6 +10469,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10446,6 +10534,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10466,6 +10556,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10490,6 +10582,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10510,6 +10604,8 @@ export namespace Prisma {
     email: string
     username: string
     password: string
+    tokenSecret?: string | null
+    tokenVersion?: number
     displayName?: string | null
     bio?: string | null
     location?: string | null
@@ -10545,6 +10641,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10565,6 +10663,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10595,6 +10695,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
@@ -10615,6 +10717,8 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     username?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
+    tokenSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     displayName?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     location?: NullableStringFieldUpdateOperationsInput | string | null
