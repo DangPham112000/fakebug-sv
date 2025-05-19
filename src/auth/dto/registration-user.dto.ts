@@ -14,7 +14,7 @@ export class RegistrationUserDto {
   username: string;
 
   @IsNotEmpty({ message: 'password should not be empty' })
-  @MinLength(8, { message: 'password must be at least 8 characters' })
+  @MinLength(3, { message: 'password must be at least 3 characters' })
   password: string;
 
   @IsOptional()

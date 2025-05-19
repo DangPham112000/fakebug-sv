@@ -45,28 +45,21 @@ export class AuthService {
 
     const hashedPassword = await this.hashPassword(registerDto.password, 10);
     const tokenSecret = this.generateTokenSecret();
-
-    const account = await this.prisma.account.create({
-      data: {
-        email: registerDto.email,
-        username: registerDto.username,
-        password: hashedPassword,
-        tokenSecret,
-        tokenVersion: 0,
-      },
-    });
-
-    const user = await this.usersService.create({
-      accountId: account.id,
-      displayName: registerDto.displayName,
-    });
-
-    return {
-      id: account.id,
-      email: account.email,
-      username: account.username,
-      displayName: user.displayName,
+    const data = {
+      email: registerDto.email,
+      username: registerDto.username,
+      password: hashedPassword,
+      tokenSecret,
+      tokenVersion: 0,
     };
+    const account = await this.prisma.account.create({ data });
+
+    await this.usersService.create({
+      accountId: account.id,
+      displayName: registerDto.displayName || registerDto.username,
+    });
+
+    return this.generateTokenPair({ account });
   }
 
   async login(

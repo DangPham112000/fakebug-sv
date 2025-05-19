@@ -8,10 +8,11 @@ async function main() {
   for (let i = 1; i <= 5; i++) {
     const account = await prisma.account.create({
       data: {
-        id: i,
         email: `user${i}@example.com`,
         username: `user${i}`,
         password: `password${i}`,
+        tokenSecret: `tokenSecret${i}`,
+        tokenVersion: 0,
       },
     });
     accounts.push(account);
@@ -21,16 +22,14 @@ async function main() {
   // Create 5 users with unique details
   const users: Array<any> = [];
   for (let i = 1; i <= 5; i++) {
-    console.log(i);
     const user = await prisma.user.create({
       data: {
-        id: i,
         displayName: `User ${i}`,
         bio: `Hi I'm user${i}. Welcome to my profile!`,
         location: `USA`,
         job: `Developer`,
         website: `google.com`,
-        accountId: i,
+        accountId: accounts[i - 1].id,
       },
     });
     users.push(user);
